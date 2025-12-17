@@ -13,11 +13,10 @@
             font-family: Tahoma, sans-serif;
             text-align: center;
             overflow: hidden;
-            transition: all 1s ease;
         }
         .message {
             position: absolute;
-            top: 50%;
+            top: 30%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 2.5em;
@@ -33,12 +32,69 @@
         @keyframes fadeIn {
             to { opacity: 1; }
         }
+
+        /* Modal Custom (پاپ‌آپ سفارشی) */
+        .modal {
+            display: none; /* ابتدا مخفی */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+        }
+        .modal-content {
+            background-color: #111;
+            margin: 20% auto;
+            padding: 30px;
+            border: 3px solid #ff0000;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px #ff0000;
+        }
+        .modal-header {
+            font-size: 2em;
+            color: #ff0000;
+            margin-bottom: 20px;
+        }
+        .modal-body {
+            font-size: 1.2em;
+            color: #fff;
+        }
+        .close-btn {
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            margin-top: 30px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
 
 <div class="message">
-    <h1>تا گوشیتو ریست کنی استفادمو کردم</h1>
+    <h1>دستگاه تحت کنترل گرفته شد!</h1>
+</div>
+<div class="subtext">
+    <p>این یک PoC امن برای نمایش قابلیت‌های یک لینک مخرب یا NFC است.<br>
+    هیچ آسیبی وارد نشده است.</p>
+</div>
+
+<!-- Modal Custom -->
+<div id="warningModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">⚠️ هشدار امنیتی!</div>
+        <div class="modal-body">
+            این صفحه از طریق NFC یا لینک بدون اجازه کامل شما اجرا شد!<br><br>
+            (این فقط یک دمو بی‌ضرر تست نفوذ است)
+        </div>
+        <button class="close-btn" onclick="closeModal()">OK</button>
+    </div>
 </div>
 
 <audio id="alertSound" preload="auto">
@@ -46,28 +102,29 @@
 </audio>
 
 <script>
-// ویبریشن (فقط اندروید کار می‌کنه)
-if ("vibrate" in navigator) {
-    navigator.vibrate([500, 200, 500, 200, 1000, 300, 500, 200, 1000]);
-}
+    // ویبریشن قوی (روی اندروید کار می‌کنه)
+    if ("vibrate" in navigator) {
+        navigator.vibrate([500, 200, 500, 200, 1000, 300, 500, 200, 1000]);
+    }
 
-// پخش صدا – سعی می‌کنه، اما اگر بلاک شد مشکلی نیست
-const sound = document.getElementById('alertSound');
-sound.play().catch(() => console.log("صدا بلاک شد – عادیه روی موبایل"));
+    // پخش صدا (اگر مرورگر اجازه بده)
+    const sound = document.getElementById('alertSound');
+    sound.play().catch(() => {});
 
-// فول‌اسکرین – سعی می‌کنه
-if (document.documentElement.requestFullscreen) {
-    document.documentElement.requestFullscreen().catch(() => {});
-}
+    // نمایش modal اتوماتیک بعد از لود صفحه
+    window.onload = function() {
+        document.getElementById('warningModal').style.display = 'block';
+    };
 
-// alert قوی‌تر و چندتا برای تأکید
-setTimeout(() => {
-    alert("⚠️ هشدار امنیتی: دستگاه هک شد!");
-}, 500);
+    // بستن modal
+    function closeModal() {
+        document.getElementById('warningModal').style.display = 'none';
+    }
 
-setTimeout(() => {
-    alert("شل کن لذت ببر");
-}, 2000);
+    // فول‌اسکرین (اگر اجازه بده)
+    if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+    }
 </script>
 
 </body>
