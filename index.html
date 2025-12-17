@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFC Security PoC</title>
+    <title>PoC</title>
     <style>
         body {
             margin: 0;
@@ -14,7 +14,7 @@
             text-align: center;
             overflow: hidden;
         }
-        .message {
+        .main-message {
             position: absolute;
             top: 30%;
             left: 50%;
@@ -23,77 +23,62 @@
             opacity: 0;
             animation: fadeIn 2s forwards 1s;
         }
-        .subtext {
-            font-size: 1.2em;
-            margin-top: 30px;
-            opacity: 0;
-            animation: fadeIn 2s forwards 3s;
-        }
         @keyframes fadeIn {
             to { opacity: 1; }
         }
 
-        /* Modal Custom (پاپ‌آپ سفارشی) */
-        .modal {
-            display: none; /* ابتدا مخفی */
+        /* پاپ‌آپ سفارشی – فقط متن، بدون هیچ URL */
+        .custom-popup {
+            display: none;
             position: fixed;
             z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.9);
+            background-color: rgba(0,0,0,0.95);
+            justify-content: center;
+            align-items: center;
         }
-        .modal-content {
-            background-color: #111;
-            margin: 20% auto;
-            padding: 30px;
-            border: 3px solid #ff0000;
-            width: 80%;
-            max-width: 400px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px #ff0000;
+        .popup-content {
+            background: #111;
+            padding: 40px;
+            border: 4px solid #ff0000;
+            border-radius: 20px;
+            max-width: 90%;
+            box-shadow: 0 0 30px #ff0000;
         }
-        .modal-header {
-            font-size: 2em;
+        .popup-text {
+            font-size: 1.8em;
             color: #ff0000;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
-        .modal-body {
-            font-size: 1.2em;
-            color: #fff;
-        }
-        .close-btn {
+        .ok-btn {
             background: #ff0000;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 1.2em;
-            margin-top: 30px;
-            cursor: pointer;
+            padding: 15px 30px;
+            font-size: 1.5em;
             border-radius: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="message">
+<div class="main-message">
     <h1>دستگاه تحت کنترل گرفته شد!</h1>
 </div>
-<div class="subtext">
-    <p>این یک PoC امن برای نمایش قابلیت‌های یک لینک مخرب یا NFC است.<br>
-    هیچ آسیبی وارد نشده است.</p>
-</div>
 
-<!-- Modal Custom -->
-<div id="warningModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">⚠️ هشدار امنیتی!</div>
-        <div class="modal-body">
-            این صفحه از طریق NFC یا لینک بدون اجازه کامل شما اجرا شد!<br><br>
-            (این فقط یک دمو بی‌ضرر تست نفوذ است)
+<!-- پاپ‌آپ سفارشی – فقط متن خالص -->
+<div id="customPopup" class="custom-popup">
+    <div class="popup-content">
+        <div class="popup-text">
+            ⚠️ هشدار امنیتی!<br><br>
+            این صفحه بدون اجازه کامل شما اجرا شد!<br><br>
+            (PoC بی‌ضرر تست نفوذ)
         </div>
-        <button class="close-btn" onclick="closeModal()">OK</button>
+        <button class="ok-btn" onclick="document.getElementById('customPopup').style.display='none'">OK</button>
     </div>
 </div>
 
@@ -102,29 +87,21 @@
 </audio>
 
 <script>
-    // ویبریشن قوی (روی اندروید کار می‌کنه)
+    // ویبریشن (روی اندروید)
     if ("vibrate" in navigator) {
         navigator.vibrate([500, 200, 500, 200, 1000, 300, 500, 200, 1000]);
     }
 
-    // پخش صدا (اگر مرورگر اجازه بده)
-    const sound = document.getElementById('alertSound');
-    sound.play().catch(() => {});
+    // پخش صدا (اگر اجازه بده)
+    document.getElementById('alertSound').play().catch(() => {});
 
-    // نمایش modal اتوماتیک بعد از لود صفحه
+    // نمایش پاپ‌آپ اتوماتیک
     window.onload = function() {
-        document.getElementById('warningModal').style.display = 'block';
+        document.getElementById('customPopup').style.display = 'flex';
     };
 
-    // بستن modal
-    function closeModal() {
-        document.getElementById('warningModal').style.display = 'none';
-    }
-
-    // فول‌اسکرین (اگر اجازه بده)
-    if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen().catch(() => {});
-    }
+    // فول‌اسکرین
+    document.documentElement.requestFullscreen?.();
 </script>
 
 </body>
