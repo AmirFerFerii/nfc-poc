@@ -49,21 +49,28 @@
 </audio>
 
 <script>
-    // ویبریشن قوی
-    if ("vibrate" in navigator) {
-        navigator.vibrate([500, 200, 500, 200, 1000, 300, 500]);
-    }
+// ویبریشن (فقط اندروید کار می‌کنه)
+if ("vibrate" in navigator) {
+    navigator.vibrate([500, 200, 500, 200, 1000, 300, 500, 200, 1000]);
+}
 
-    // پخش صدا
-    const sound = document.getElementById('alertSound');
-    sound.play().catch(() => {});
+// پخش صدا – سعی می‌کنه، اما اگر بلاک شد مشکلی نیست
+const sound = document.getElementById('alertSound');
+sound.play().catch(() => console.log("صدا بلاک شد – عادیه روی موبایل"));
 
-    // فول‌اسکرین
-    if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen().catch(() => {});
-    }
+// فول‌اسکرین – سعی می‌کنه
+if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen().catch(() => {});
+}
 
-   
+// alert قوی‌تر و چندتا برای تأکید
+setTimeout(() => {
+    alert("⚠️ هشدار امنیتی: دستگاه هک شد! (PoC بی‌ضرر)");
+}, 500);
+
+setTimeout(() => {
+    alert("این یک دمو تست نفوذ از طریق NFC/لینک است!\nهیچ آسیبی وارد نشده.");
+}, 2000);
 </script>
 
 </body>
