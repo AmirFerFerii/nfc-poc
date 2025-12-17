@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC Security PoC</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #ff0000;
+            font-family: Tahoma, sans-serif;
+            text-align: center;
+            overflow: hidden;
+            transition: all 1s ease;
+        }
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5em;
+            opacity: 0;
+            animation: fadeIn 2s forwards 1s;
+        }
+        .subtext {
+            font-size: 1.2em;
+            margin-top: 30px;
+            opacity: 0;
+            animation: fadeIn 2s forwards 3s;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="message">
+    <h1>دستگاه تحت کنترل گرفته شد!</h1>
+</div>
+<div class="subtext">
+    <p>این یک PoC امن برای نمایش قابلیت‌های یک لینک مخرب یا NFC است.<br>
+    هیچ آسیبی وارد نشده است.</p>
+</div>
+
+<audio id="alertSound" preload="auto">
+    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    // ویبریشن قوی
+    if ("vibrate" in navigator) {
+        navigator.vibrate([500, 200, 500, 200, 1000, 300, 500]);
+    }
+
+    // پخش صدا
+    const sound = document.getElementById('alertSound');
+    sound.play().catch(() => {});
+
+    // فول‌اسکرین
+    if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+    }
+
+    // alert
+    setTimeout(() => {
+        alert("هشدار امنیتی: این صفحه از طریق NFC یا لینک بدون اجازه شما اجرا شد!\n\n(این فقط یک دمو بی‌ضرر است)");
+    }, 1500);
+</script>
+
+</body>
+</html>
